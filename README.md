@@ -9,3 +9,8 @@
 - API : CKEditor, 다음주소 API
 - 개발언어 : JAVA, JSP, Javascript, Jquery, Ajax, CSS, MySQL
 
+핵심 구현 클래스***
+
+- JdbcContext
+
+JdbcTemplate 과 유사한 기능을 하며 데이터베이스 SQL문을 간편하게 실행 할 수 있도록 한다.
