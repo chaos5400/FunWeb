@@ -1,0 +1,311 @@
+/*
+유저 생성 및 권한 부여
+create user jspid@localhost identified by 'jsppass';
+grant all privileges on *.* to jspid@localhost identified by 'jsppass' with grant option;
+*/
+
+-- 사용법 : 
+-- 유저 생성 후 해당 유저로 접속합니다.
+-- 밑에 있는 SQL 문을 처음부터 끝까지 긁어서 콘솔창에 붙여넣기 하시면 됩니다.
+
+DROP DATABASE IF EXISTS FunWeb;
+
+CREATE DATABASE FunWeb;
+
+USE FunWeb
+
+-- 계정 정보 테이블 정의
+
+DROP TABLE IF EXISTS TokenArchive;
+DROP TABLE IF EXISTS Account;
+
+
+CREATE TABLE Account (
+Idx INT AUTO_INCREMENT,
+CONSTRAINT acc_idx_pk PRIMARY KEY(Idx),
+UserID VARCHAR(100) NOT NULL,
+Password VARCHAR(20) NOT NULL,
+FirstName VARCHAR(20) NOT NULL,
+LastName VARCHAR(20) NOT NULL,
+Address VARCHAR(200),
+PhoneNumber VARCHAR(20),
+MobilePhoneNumber VARCHAR(20),
+UserRole VARCHAR(20) NOT NULL,
+CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+EMailActive BIT DEFAULT false NOT NULL,
+TokenIdx BIGINT DEFAULT 0
+);
+
+ALTER TABLE Account ADD CONSTRAINT acc_name_uk UNIQUE(UserID);
+
+
+INSERT INTO Account (UserID, Password, FirstName, LastName, Address, PhoneNumber, MobilePhoneNumber, UserRole, EMailActive) 
+VALUES ('papayaza999@gmail.com', 'asd123!', '1', '관리자', 'post code&road address&jibun address&detail address&',
+ '051-123-4567', '010-1234-5678', 'ADMIN', true); 
+
+INSERT INTO Account (UserID, Password, FirstName, LastName, Address, PhoneNumber, MobilePhoneNumber, UserRole, EMailActive) 
+VALUES ('papayaza111@gmail.com', 'asd123!', '1', '회원', 'post code2&road address2&jibun address2&detail address2&',
+ '051-123-4567', '010-1234-5678', 'MEMBER', true); 
+
+
+-- Token 삽입
+-- -> 삽입 후 인덱스 값 반환
+-- -> 해당 인덱스 값을 사용하여 Account 계정 생성시 TokenIdx에 값 대입
+-- -> 이메일 인증시 해당 Token값을 비교하여 일치하는 토큰값의 계정 인덱스 값을 이용한다.
+CREATE TABLE TokenArchive (
+Idx BIGINT AUTO_INCREMENT,
+CONSTRAINT tka_idx_pk PRIMARY KEY(Idx),
+Token VARCHAR(50)
+);
+
+ALTER TABLE TokenArchive ADD CONSTRAINT tka_token_uk UNIQUE(Token);
+
+
+
+
+-- 계정 정보 테이블 정의
+
+
+
+
+
+
+
+
+
+-- 게시판 시퀀스 및 임시 이미지 경로 저장 테이블 정의
+
+DROP TABLE IF EXISTS BoardTempImages;
+DROP TABLE IF EXISTS BoardSequence;
+
+CREATE TABLE BoardSequence (
+Seq INT AUTO_INCREMENT,
+CONSTRAINT bts_seq_pk PRIMARY KEY(Seq)
+);
+
+
+CREATE TABLE BoardTempImages (
+Seq INT NOT NULL,
+Path VARCHAR(260) NOT NULL
+);
+
+ALTER TABLE BoardTempImages
+ADD CONSTRAINT bti_seq_fk FOREIGN KEY(Seq) REFERENCES BoardSequence(Seq) ON DELETE CASCADE;
+
+
+-- 게시판 시퀀스 및 임시 이미지 경로 저장 테이블 정의
+
+
+
+
+
+-- Notice 테이블 정의
+
+DROP TABLE IF EXISTS NoticeImages;
+DROP TABLE IF EXISTS Notice;
+
+CREATE TABLE Notice (
+Idx INT NOT NULL,
+BoardNo TINYINT DEFAULT 0 NOT NULL,
+No INT,
+Title VARCHAR(100) NOT NULL,
+Content MEDIUMTEXT  NOT NULL,
+Writer VARCHAR(100),
+CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+ReadCount MEDIUMINT DEFAULT 0 NOT NULL
+);
+
+ALTER TABLE Notice CHANGE COLUMN BoardNo 
+BoardNo TINYINT DEFAULT 0 NOT NULL COMMENT 'Notice: 0, PublicNews: 1, Inquiry: 2';
+
+ALTER TABLE Notice ADD CONSTRAINT not_no_pk PRIMARY KEY(No);
+
+ALTER TABLE Notice MODIFY No INT AUTO_INCREMENT;
+
+
+CREATE TABLE NoticeImages (
+No INT NOT NULL,
+Path VARCHAR(260) NOT NULL
+);
+
+ALTER TABLE NoticeImages
+ADD CONSTRAINT noti_no_fk FOREIGN KEY(No) REFERENCES Notice(No) ON DELETE CASCADE;
+
+-- Notice 테이블 정의
+
+
+
+
+
+-- PublicNews 테이블 정의
+
+DROP TABLE IF EXISTS PublicNewsImages;
+DROP TABLE IF EXISTS PublicNews;
+
+CREATE TABLE PublicNews (
+Idx INT NOT NULL,
+BoardNo TINYINT DEFAULT 1 NOT NULL,
+No INT,
+Title VARCHAR(100) NOT NULL,
+Content MEDIUMTEXT  NOT NULL,
+Writer VARCHAR(100),
+CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+ReadCount MEDIUMINT DEFAULT 0 NOT NULL
+);
+
+ALTER TABLE PublicNews CHANGE COLUMN BoardNo 
+BoardNo TINYINT DEFAULT 1 NOT NULL COMMENT 'Notice: 0, PublicNews: 1, Inquiry: 2';
+
+ALTER TABLE PublicNews ADD CONSTRAINT pub_no_pk PRIMARY KEY(No);
+
+ALTER TABLE PublicNews MODIFY No INT AUTO_INCREMENT;
+
+
+CREATE TABLE PublicNewsImages (
+No INT NOT NULL,
+Path VARCHAR(260) NOT NULL
+);
+
+ALTER TABLE PublicNewsImages
+ADD CONSTRAINT pubi_no_fk FOREIGN KEY(No) REFERENCES PublicNews(No) ON DELETE CASCADE;
+
+-- PublicNews 테이블 정의
+
+
+
+
+
+-- Inquiry 테이블
+
+DROP TABLE IF EXISTS InquiryImages;
+DROP TABLE IF EXISTS Inquiry;
+
+CREATE TABLE Inquiry (
+Idx INT NOT NULL,
+BoardNo TINYINT DEFAULT 2 NOT NULL,
+No INT,
+Title VARCHAR(100) NOT NULL,
+Content MEDIUMTEXT  NOT NULL,
+Writer VARCHAR(100),
+CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+ReadCount MEDIUMINT DEFAULT 0 NOT NULL,
+Password VARCHAR(20) NOT NULL,
+BGroup INT DEFAULT 0 NOT NULL,
+Step TINYINT DEFAULT 0 NOT NULL,
+Indent TINYINT DEFAULT 0 NOT NULL,
+ReplyNo INT DEFAULT 1
+);
+
+ALTER TABLE Inquiry CHANGE COLUMN BoardNo 
+BoardNo TINYINT DEFAULT 2 NOT NULL COMMENT 'Notice: 0, PublicNews: 1, Inquiry: 2';
+
+ALTER TABLE Inquiry ADD CONSTRAINT inq_no_pk PRIMARY KEY(No);
+
+ALTER TABLE Inquiry MODIFY No INT AUTO_INCREMENT;
+
+-- 첫번째 데이터는 더미 데이터이다. 이 행의 No값은 다른 글의 참조용으로 사용된다.
+-- 이것은 게시글이 삭제되었을 때 그 게시글에 대한 답글을 연쇄적으로 삭제하기 위해서다.
+INSERT INTO Inquiry (Idx, Title, Content, Writer, Password) 
+VALUES (0, '', '', '', '');
+
+-- 외래키 제약조건을 주어 게시글을 연쇄적으로 삭제할 수 있게 한다.
+-- 문의글 삭제시 그에 달린 답글도 전부 삭제
+ALTER TABLE Inquiry ADD CONSTRAINT inq_rno_fk 
+FOREIGN KEY(ReplyNo) REFERENCES Inquiry(No) ON DELETE CASCADE;
+
+CREATE TABLE InquiryImages (
+No INT NOT NULL,
+Path VARCHAR(260) NOT NULL
+);
+
+ALTER TABLE InquiryImages
+ADD CONSTRAINT inqi_no_fk FOREIGN KEY(No) REFERENCES Inquiry(No) ON DELETE CASCADE;
+
+-- Inquiry 테이블
+
+
+
+
+
+
+
+
+
+
+
+-- Notice 테이블에 테스트를 위한 더미 테이터를 삽입하는 프로시져이다.
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS FILL_DATA_NOTICE$$
+CREATE PROCEDURE FILL_DATA_NOTICE()
+BEGIN
+DECLARE i INT DEFAULT 1;
+
+WHILE i <= 450 DO
+
+INSERT INTO Notice (Idx, Title, Content, Writer) 
+VALUES (1, CONCAT('This is Notice Title', i), 'This is Notice Content', 'papayaza999@gmail.com');
+
+SET i = i + 1;
+
+END WHILE;
+END$$
+DELIMITER ;
+
+CALL FILL_DATA_NOTICE();
+
+-- Notice 테이블 더미 테이터 삽입 프로시져 종료.
+
+
+
+
+-- PublicNews 테이블에 테스트를 위한 더미 테이터를 삽입하는 프로시져이다.
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS FILL_DATA_PUBLIC_NEWS$$
+CREATE PROCEDURE FILL_DATA_PUBLIC_NEWS()
+BEGIN
+DECLARE i INT DEFAULT 1;
+
+WHILE i <= 450 DO
+
+INSERT INTO PublicNews (Idx, Title, Content, Writer) 
+VALUES (1, CONCAT('This is PublicNews Title', i), 'This is PublicNews Content', 'papayaza999@gmail.com');
+
+SET i = i + 1;
+
+END WHILE;
+END$$
+DELIMITER ;
+
+CALL FILL_DATA_PUBLIC_NEWS();
+
+-- PublicNews 더미 테이터 삽입 프로시져 종료.
+
+
+
+-- Inquiry 테이블에 테스트를 위한 더미 테이터를 삽입하는 프로시져이다.
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS FILL_DATA_INQUIRY$$
+CREATE PROCEDURE FILL_DATA_INQUIRY()
+BEGIN
+DECLARE i INT DEFAULT 1;
+
+WHILE i <= 450 DO
+
+INSERT INTO Inquiry (Idx, Title, Content, Writer, Password) 
+VALUES (2, CONCAT('This is Inquiry Title', i), 'This is Inquiry Content', 'papayaza111@gmail.com', '1234');
+
+UPDATE Inquiry SET BGroup = LAST_INSERT_ID() WHERE No = LAST_INSERT_ID();
+
+SET i = i + 1;
+
+END WHILE;
+END$$
+DELIMITER ;
+
+CALL FILL_DATA_INQUIRY();
+
+-- Inquiry 테이블 더미 테이터 삽입 프로시져 종료.
+
