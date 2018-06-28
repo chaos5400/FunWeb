@@ -24,7 +24,6 @@
 - 람다식을 사용하기 때문에 자바 컴파일러 버전이 1.8이상인 환경에서만 사용 가능하다.
 
 사용예) - executeUpdate(“INSERT INTO TableName (Name, Age) VALUES (‘Hong’, 24)“);
-
 사용예) - queryForObject("SELECT FirstName, LastName, Address, PhoneNumber, MobilePhoneNumber "
 		+ "FROM Account WHERE Idx = " + idx,
 			rs -> {
