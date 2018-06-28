@@ -27,8 +27,8 @@
 
 사용예) - queryForObject("SELECT FirstName, LastName, Address, PhoneNumber, MobilePhoneNumber "
 
-		+ "FROM Account WHERE Idx = " + idx,
-	
+			+ "FROM Account WHERE Idx = " + idx,
+			
 			rs -> {
 			
 				Account dto = new Account();
@@ -46,3 +46,9 @@
 				return dto;
 			
 			});
+
+구현 기능
+1. 회원가입 입력 폼 실시간 유효성 검사
+2. 회원가입 완료 시 이메일 인증
+3. 로그인
+4. 게시판(Notice & Public News, 고객문의)
