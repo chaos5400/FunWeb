@@ -6,7 +6,7 @@
 <%
 	
 	request.setCharacterEncoding("UTF-8");
-	
+	 
 	// 파일을 업로드하고 업로드된 경로를 가져온다. 
 	String uploadPath = new FileUtils(request, "/upload/images/").getUploadPath();
 	
