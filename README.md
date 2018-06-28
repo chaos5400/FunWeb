@@ -4,7 +4,9 @@
 개발자: 정진원
 
 제작기간 : 2018.04.01 ~ 2018.05.10
+
 ---
+
 실행 시 참고사항!!!
 - 개발시에는 Eclipse 툴을 사용하였지만 프로젝트를 GitHub 에서 Pull하여 사용할 경우 편의를 위해 STS(Spring Tool Suite)에 내장된 git plugin을 사용한다. (Eclipse Mars 2 Release 대신 STS 3.8.4 를 이용한다.)
 - Perspective 를 Java EE로 한다.
@@ -21,15 +23,18 @@
 		    driverClassName="com.mysql.jdbc.Driver"
 		    url="jdbc:mysql://localhost:3306/funweb"
 	    />
-
+	    
 ---
+
 ### 프로젝트 개발환경
 - 개발도구 : Eclipse Mars 2 Release, MySQL community 5.6.35.0, Apache Tomcat v8.0, Java Compiler 1.8
 - SDK : JDK 1.8
 - API : CKEditor, 다음주소 API
 - 개발언어 : JAVA, JSP, Javascript, Jquery, Ajax, CSS, MySQL
 - MVC Model 2
+
 ---
+
 ## 핵심 구현 클래스
 
 ### JdbcContext
@@ -58,9 +63,9 @@
 			});
 
 
-
 ---
-구현 기능
+
+### 구현 기능
 1. 회원가입 입력 폼 실시간 유효성 검사
 2. 회원가입 완료 시 이메일 인증
 3. 로그인
