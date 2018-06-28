@@ -29,7 +29,7 @@
 			rs -> {
 				Account dto = new Account();
 				dto.setFirstName(rs.getString(1));
-				dto.setLastName(rs.getString(2));
+				dto.setLastName(rs.getString(2)); 
 				dto.setAddress(rs.getString(3));
 				dto.setPhoneNumber(rs.getString(4));
 				dto.setMobilePhoneNumber(rs.getString(5));
