@@ -25,9 +25,8 @@
 
 사용예) - executeUpdate(“INSERT INTO TableName (Name, Age) VALUES (‘Hong’, 24)“);
 사용예) - queryForObject("SELECT FirstName, LastName, Address, PhoneNumber, MobilePhoneNumber "
-		      + "FROM Account WHERE Idx = " + idx,
+		+ "FROM Account WHERE Idx = " + idx,
 			rs -> {
-				/* 회원 정보W를 DB에서 가져온다. */
 				Account dto = new Account();
 				dto.setFirstName(rs.getString(1));
 				dto.setLastName(rs.getString(2));
