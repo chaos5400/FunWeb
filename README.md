@@ -24,14 +24,25 @@
 - 람다식을 사용하기 때문에 자바 컴파일러 버전이 1.8이상인 환경에서만 사용 가능하다.
 
 사용예) - executeUpdate(“INSERT INTO TableName (Name, Age) VALUES (‘Hong’, 24)“);
+
 사용예) - queryForObject("SELECT FirstName, LastName, Address, PhoneNumber, MobilePhoneNumber "
+
 		+ "FROM Account WHERE Idx = " + idx,
+	
 			rs -> {
+			
 				Account dto = new Account();
+				
 				dto.setFirstName(rs.getString(1));
+				
 				dto.setLastName(rs.getString(2)); 
+				
 				dto.setAddress(rs.getString(3));
+				
 				dto.setPhoneNumber(rs.getString(4));
+				
 				dto.setMobilePhoneNumber(rs.getString(5));
+				
 				return dto;
+			
 			});
