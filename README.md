@@ -45,14 +45,14 @@
 
 사용예)
 	
-	new JdbcContext("java:comp/env/jdbc/funweb");<br>
+	new JdbcContext("java:comp/env/jdbc/funweb");
 	
 	executeUpdate(“INSERT INTO TableName (Name, Age) VALUES (‘Hong’, 24)“);
 	
 	queryForObject("SELECT FirstName, LastName, Address, PhoneNumber, MobilePhoneNumber "
 		      + "FROM Account WHERE Idx = " + idx,
 			rs -> {
-				/* 회원 정보W를 DB에서 가져온다. */
+				/* 회원 정보를 DB에서 가져온다. */
 				Account dto = new Account();
 				dto.setFirstName(rs.getString(1));
 				dto.setLastName(rs.getString(2));
